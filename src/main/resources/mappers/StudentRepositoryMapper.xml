@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="repository.StudentRepository">
+
+
+    <resultMap id="studentResultMap" type="domain.Student">
+        <id property="id" column="id" />
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="gender" column="gender"/>
+        <result property="telephone" column="telephone"/>
+        <result property="email" column="email"/>
+        <association property="classes" column="classid" javaType="domain.Classes">
+            <id property="id" column="cid"/>
+            <result property="name" column="cname"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultMap="studentResultMap">
+        SELECT s.id, s.name, s.age, s.gender, s.telephone, s.email, c.id cid, c.name cname
+        FROM student s INNER JOIN classes c
+        ON s.classid = c.id;
+    </select>
+
+    <insert id="insert" parameterType="domain.Student">
+        INSERT INTO student(name, age, gender, telephone, email, classid)
+                VALUES(#{name}, #{age}, #{gender}, #{telephone}, #{email}, #{classes.id})
+    </insert>
+</mapper>
